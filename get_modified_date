@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#this script find haven't opened file for 1 month or more 
+
+OVERTIME=30
+
+current_date=$(date +%Y%m%d)
+limit_day=$(date -d "$current_date - $OVERTIME days" +%Y%m%d)
+
+OUTDIR=/path/to/your/modified.log
+TARDIR=/path/to/search/directory
+
+
+echo "LAST MODIFIED DATE OF FILE WITH PATH" > "$OUTDIR"
+echo "*******************************" >> "$OUTDIR"
+
+for file in "$TARDIR"/*; do 
+	
+	last_modified_date=$(ls -l |stat -c %y "$file" |cut -d' ' -f1)
+	
+	#first two line below are doing same job
+	last_modified_date=${last_modified_date//-/}
+	#last_modified_date="${last_access_date:0:4}${last_access_date:5:2}${last_access_date:8:2}"
+	if [ "$limit_day" -gt "$last_modified_date" ]; then 
+		
+		echo "${last_modified_date} $file" >> "$OUTDIR"
+	
+	fi
+done 

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd /path/to/your/modified.log/access.log/directory
+
+echo "$(awk 'FNR==NR{a[$1];next}($1 in a){print}'  unused_files.log  overtime_files.log)" > /path/to/your/match.log

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+OVERTIME=30
+
+current_date=$(date +%Y%m%d)
+limit_day=$(date -d "$current_date - $OVERTIME days" +%Y%m%d)
+
+OUTDIR=/path/to/your/access.log
+TARDIR=/path/to/search/directory
+
+echo "LAST ACCESS TIME OF FILE WITH PATH" > "$OUTDIR"
+echo "*******************************" >> "$OUTDIR"
+
+for file in "$TARDIR"/*; do 
+	
+	last_access_time=$(ls -l |stat -c %x "$file" |cut -d' ' -f1)
+	
+	#first two line below are doing same job
+	last_access_time=${last_access_time//-/}
+	#last_access_time="${last_access_date:0:4}${last_access_date:5:2}${last_access_date:8:2}"
+	if [ "$limit_day" -gt "$last_access_time" ]; then 
+		
+		echo "${last_access_time} $file" >> "$OUTDIR"
+	
+	fi
+done 
